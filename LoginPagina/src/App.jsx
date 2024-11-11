@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./componenten/paginas/Home.jsx";
+import Doel from "./componenten/paginas/Doel.jsx";
+import Navigatie from "./componenten/Navigatie.jsx";
+import LogIn from "./componenten/paginas/LogIn.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const mysql = require("mysql");
 
+  const connection = mysql.createConnection({
+    host: "localhost",
+    user: "username",
+    password: "password",
+    database: "database_name",
+  });
+
+  connection.connect((err) => {
+    if (err) {
+      console.error("Error connecting to MySQL: " + err.stack);
+      return;
+    }
+
+    console.log("Connected to MySQL as ID " + connection.threadId);
+  });
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigatie />}>
+          <Route index element={<Home />} />
+          <Route path="doel" element={<Doel />} />
+          <Route path="login" element={<LogIn />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
